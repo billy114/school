@@ -28,4 +28,10 @@ public class CourseImplem implements CourseService {
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }
+
+    @Override
+    public List<Course> filterPerWordInDescription(String word) {
+        return courseRepository.findByDescriptionContaining(word);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.school.serviceImplem;
 
+import com.example.school.models.Course;
 import com.example.school.models.Student;
 import com.example.school.repositories.StudentRepository;
 import com.example.school.services.StudentService;
@@ -27,5 +28,11 @@ public class StudentImplem implements StudentService {
     @Override
     public Optional<Student> getStudentById(Long id) {
         return studentRepository.findById(id);
+    }
+
+    @Override
+    public Student subscribeToCourse(Student student, Course course) {
+        student.getCourses().add(course);
+        return studentRepository.save(student);
     }
 }

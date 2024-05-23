@@ -8,4 +8,5 @@ public interface CourseService {
     Optional<Course> getCourseById(Long id);
     List<Course> getAllCourses();
     Course createCourse (Course course);
+    List<Course> filterPerWordInDescription(String word);
 }

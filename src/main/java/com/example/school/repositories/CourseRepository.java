@@ -12,4 +12,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     Optional<Course> findById(Long id);
     List<Course> findAll();
     Course save(Course course);
+    List<Course> findByDescriptionContaining(String word);
 }

@@ -48,4 +48,13 @@ public class CourseController {
                 HttpStatus.OK
         );
     }
+
+    @GetMapping("filter/{word}")
+    public ResponseEntity<List<Course>> filterPerWordInDescription(@PathVariable String word){
+        return new ResponseEntity<>(
+                courseService.filterPerWordInDescription(word),
+                HttpStatus.OK
+        );
+    }
+
 }

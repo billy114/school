@@ -1,10 +1,10 @@
 package com.example.school.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,4 +16,7 @@ public class Student {
 
     private String name;
     private int age;
+
+    @ManyToMany
+    List<Course> courses = new ArrayList<>();
 }

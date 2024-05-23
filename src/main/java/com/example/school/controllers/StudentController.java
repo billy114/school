@@ -1,8 +1,10 @@
 package com.example.school.controllers;
 
+import com.example.school.models.Course;
 import com.example.school.models.Student;
 import com.example.school.repositories.StudentRepository;
 import com.example.school.serviceImplem.StudentImplem;
+import com.example.school.services.CourseService;
 import com.example.school.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,9 @@ import java.util.Optional;
 public class StudentController {
     @Autowired
     StudentService studentService;
+
+    @Autowired
+    CourseService courseService;
 
     @GetMapping("{id}")
     public ResponseEntity<?> getStudentById (@PathVariable Long id){
@@ -52,15 +57,24 @@ public class StudentController {
         );
     }
 
+    @PostMapping("subscribe/{studentId}/{courseId}")
+    public ResponseEntity<?> subscribeToCourse(@PathVariable Long studentId, @PathVariable Long courseId){
+        Optional<Student> student = studentService.getStudentById(studentId);
+        if (student.isEmpty())
+            return new ResponseEntity<>(
+                    "Student not found",
+                    HttpStatus.NOT_FOUND
+            );
+        Optional<Course> course = courseService.getCourseById(courseId);
+        if (course.isEmpty())
+            return new ResponseEntity<>(
+                    "Course not found",
+                    HttpStatus.NOT_FOUND
+            );
 
-
-
-
-
-
-
-
-
-
-
+        return new ResponseEntity<>(
+                studentService.subscribeToCourse(student.get(), course.get()),
+                HttpStatus.OK
+        );
+    }
 }

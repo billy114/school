@@ -1,5 +1,6 @@
 package com.example.school.controllers;
 
+import com.example.school.DTOs.CourseDTO;
 import com.example.school.models.Course;
 import com.example.school.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +20,9 @@ public class CourseController {
     CourseService courseService;
 
     @PostMapping
-    public ResponseEntity<Course> createCourse(@RequestBody Course course){
+    public ResponseEntity<?> createCourse(@RequestBody Course course){
         return new ResponseEntity<>(
-                courseService.createCourse(course),
+                CourseDTO.createCourseDTO(courseService.createCourse(course)),
                 HttpStatus.CREATED
         );
     }
@@ -30,7 +32,7 @@ public class CourseController {
         Optional<Course> course = courseService.getCourseById(id);
         if (course.isPresent()){
             return new ResponseEntity<>(
-                    course.get(),
+                    CourseDTO.createCourseDTO(course.get()),
                     HttpStatus.OK
             );
         }else{
@@ -42,19 +44,28 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Course>> getAllCourses(){
+    public ResponseEntity<?> getAllCourses(){
+
         return new ResponseEntity<>(
-                courseService.getAllCourses(),
+                map(courseService.getAllCourses()),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("filter/{word}")
-    public ResponseEntity<List<Course>> filterPerWordInDescription(@PathVariable String word){
+    public ResponseEntity<?> filterPerWordInDescription(@PathVariable String word){
         return new ResponseEntity<>(
-                courseService.filterPerWordInDescription(word),
+                map(courseService.filterPerWordInDescription(word)),
                 HttpStatus.OK
         );
+    }
+
+    public List<CourseDTO> map (List<Course> courses){
+        List<CourseDTO> res = new ArrayList<>();
+        for (Course course : courses){
+            res.add(CourseDTO.createCourseDTO(course));
+        }
+        return res;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.school.controllers;
 
+import com.example.school.DTOs.StudentDTO;
 import com.example.school.models.Course;
 import com.example.school.models.Student;
 import com.example.school.repositories.StudentRepository;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,7 +32,7 @@ public class StudentController {
 
         if (student.isPresent()) {
             return new ResponseEntity<>(
-                    student.get(),
+                    StudentDTO.createStudentDTO(student.get()),
                     HttpStatus.OK
             );
         }else {
@@ -44,15 +47,20 @@ public class StudentController {
     public ResponseEntity<?> createStudent (@RequestBody Student student){
         Student savedStudent = studentService.createStudent(student);
         return new ResponseEntity<>(
-                savedStudent,
+                StudentDTO.createStudentDTO(savedStudent),
                 HttpStatus.CREATED
         );
     }
 
     @GetMapping
     public ResponseEntity<?> getAllStudent(){
+        List<Student> students = studentService.getAllStudents();
+        List<StudentDTO> studentDTOS = new ArrayList<>();
+        for (Student student : students){
+            studentDTOS.add(StudentDTO.createStudentDTO(student));
+        }
         return new ResponseEntity<>(
-                studentService.getAllStudents(),
+                studentDTOS,
                 HttpStatus.OK
         );
     }
